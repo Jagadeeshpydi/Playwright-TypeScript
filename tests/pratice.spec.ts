@@ -57,7 +57,7 @@ test.only('Create a user' ,async({page})=>{
  await page
   .locator('.category-card-variant-two')
   .filter({ hasText: 'Connector Plus' })
-  .getByRole('button', { name: /Select Module/i })
+  .getByRole('button', { name: 'Select Module' })
   .click();
 await expect(page.locator('span.header-title')).toHaveText('APC');
 await expect(page).toHaveURL('https://122.175.46.149:3009/apc/dashboard');
@@ -88,24 +88,49 @@ await page.getByLabel("Org Name").isVisible();
 
   // Step 9: Role Validation
  
-// Select Role
-// Open Role dropdown
-await page.locator("//span[text()='Select Role']").click();
-await page.locator("//div[text()='Operator']").click();
+// Step 9: Role Validation
 
-// Hover over the selected Role
-//await page.locator('.ant-select').first().hover();
+// Wait until Add User drawer is visible
+const role = page.locator('.ant-drawer');
+await expect(role).toBeVisible();
+
+// Click the Role dropdown inside the drawer
+await role.locator('.ant-select-selector').nth(0).click();
+
+// Select the Tester role
+await page.getByText('Tester', { exact: true }).click();
+
+// Hover over the selected Role to display the clear (X) icon
+await role.locator('.ant-select').nth(0).hover();
 
 // Click the clear (X) icon
-//await page.locator('.ant-select-clear').first().click();
+await role.locator('.ant-select-clear').click();
 
-  /* Step 10: Site Validation
-await page.getByText('site 4', { exact: true }).click();
-await page.locator('.ant-select-clear').click();
-await expect(page.getByText('Please select the Site!')).toBeVisible(); */
+// Verify Role validation message
+await expect(page.getByText('Please select the Role!')).toBeVisible();
+
+  // Step 10: Site Validation
+const siteDropdown = page.locator('#form_item_site')
+    .locator('xpath=ancestor::div[contains(@class,"ant-select")]');
+
+await siteDropdown.locator('.ant-select-selector').click();
+
+
+// Click Site dropdown
+await page.locator("//span[text()='Select Site']").click();
+
+await page.locator("//span[text()='site 4']").click();
+// Hover over Site dropdown
+await siteDropdown.locator('.ant-select').nth(1).hover();
+
+// Click clear icon
+await siteDropdown.locator('.ant-select-clear').click();
+
+// Verify Site validation message
+await expect(page.getByText('Please select the Site!')).toBeVisible()
 
   // Step 11: Verify Submit Button Disabled
- // await expect(page.getByRole('button', { name: 'Submit' })).toBeDisabled();
+  await expect(page.getByRole('button', { name: 'Submit' })).toBeDisabled();
 
 });
 //if the tag name and role is same we can call it as implicitly define roles
