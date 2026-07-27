@@ -16,14 +16,14 @@ import  { test, expect, Locator } from '@playwright/test';
 
 test('verify login page' ,async({page})=>{
 
-    await page.goto('https://122.175.46.149:3009/A=19uS/login');
+    await page.goto('https://122.175.46.149:3009/cGh6aW90/login');
     await expect(page).toHaveTitle("Connected Plant");
     console.log(await page.title());
 
     //locator is afixture  
     //to specify the type of variable we need to use locator(L is alway caps)
 
-    const logo:Locator =page.getByAltText('Astellas');
+    const logo:Locator =page.getByAltText('Phizzle');
     await expect(logo).toBeVisible();
 
   //const text:Locator=page.getByText('User Name');
@@ -46,11 +46,11 @@ i → Case-insensitive (forgot password?, FORGOT PASSWORD?, etc.) */
 
 test.only('Create a user' ,async({page})=>{
 
-  await page.goto('https://122.175.46.149:3009/A=19uS/login');
+  await page.goto('https://122.175.46.149:3009/cGh6aW90/login');
   await expect(page).toHaveTitle("Connected Plant");
     console.log(await page.title());
 
-  await page.getByPlaceholder('User Name').fill('astellas-admin');
+  await page.getByPlaceholder('User Name').fill('phziot-admin');
   await page.getByPlaceholder('Password').fill('Welcome_123!');
   await page.getByRole('button', {name:'login'}).click();
  // await page.getByRole('button', {name:'Select Module'}).click();
@@ -109,25 +109,25 @@ await role.locator('.ant-select-clear').click();
 // Verify Role validation message
 await expect(page.getByText('Please select the Role!')).toBeVisible();
 
-  // Step 10: Site Validation
-const siteDropdown = page.locator('#form_item_site')
-    .locator('xpath=ancestor::div[contains(@class,"ant-select")]');
+ // Step 10: Site Validation
 
-await siteDropdown.locator('.ant-select-selector').click();
+const site = page
+  .locator('#form_item_site')
+  .locator('xpath=ancestor::div[contains(@class,"ant-select")]');
 
+// Open the dropdown
+await site.locator('.ant-select-selector').click();
 
-// Click Site dropdown
-await page.locator("//span[text()='Select Site']").click();
-
+// Select the site
 await page.locator("//span[text()='site 4']").click();
-// Hover over Site dropdown
-await siteDropdown.locator('.ant-select').nth(1).hover();
+// Hover over the dropdown (only if your application requires it)
+await site.locator('.ant-select-selector').hover();
+// Click the clear (X) icon
+await site.locator('.ant-select-clear').click();
 
-// Click clear icon
-await siteDropdown.locator('.ant-select-clear').click();
+// Verify validation message
+await expect(page.getByText('Please select the Site!')).toBeVisible();
 
-// Verify Site validation message
-await expect(page.getByText('Please select the Site!')).toBeVisible()
 
   // Step 11: Verify Submit Button Disabled
   await expect(page.getByRole('button', { name: 'Submit' })).toBeDisabled();
