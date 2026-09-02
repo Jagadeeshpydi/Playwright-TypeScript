@@ -33,7 +33,14 @@ test('two contexts and two pages', async () => {
   
   await expect(message1).toContainText('User does not exist');
 
-  console.log('the admin and the super admin users logged in sucessfully')
+  console.log('the admin and the super admin users logged in sucessfully');
+
+context1.setDefaultTimeout(30000);
+context2.setDefaultTimeout(30000);
+page1.setDefaultTimeout(30000);
+page2.setDefaultTimeout(30000);
+
+
 
   await browser.close();
 });
